@@ -1,0 +1,7 @@
+@define-mixin disable-mobile-animations $breakpoint, $duration, $animationTimingFunction, $animationName {
+  animation: none;
+
+  @media screen and (min-width: $breakpoint) {
+    animation: $duration $animationTimingFunction $animationName infinite;
+  }
+}

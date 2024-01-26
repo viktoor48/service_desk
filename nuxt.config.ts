@@ -9,6 +9,14 @@ export default defineNuxtConfig({
     },
   },
   css: ['vue-final-modal/style.css'],
+  postcss: {
+    plugins: {
+      'tailwindcss': {},
+      'postcss-mixins': {},
+      'postcss-simple-vars': {},
+      'postcss-nested': {},
+    },
+  },
   modules: [
     '@nuxtjs/eslint-module',
     '@nuxtjs/google-fonts',
@@ -20,10 +28,13 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       Inter: {
-        wght: [400, 600],
+        wght: [400, 600, 700],
       },
       Unbounded: {
-        wght: [700],
+        wght: [400, 600, 700, 800],
+      },
+      Montserrat: {
+        wght: [400, 500, 700],
       },
     },
   },
