@@ -2,6 +2,7 @@
 import svgLoader from 'vite-svg-loader'
 
 export default defineNuxtConfig({
+  devtools: { enabled: true },
   app: {
     head: {
       charset: 'utf-8',
@@ -20,10 +21,13 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       Inter: {
-        wght: [400, 600],
+        wght: [400, 600, 700],
       },
       Unbounded: {
-        wght: [700],
+        wght: [400, 600, 700, 800],
+      },
+      Montserrat: {
+        wght: [400, 500, 700],
       },
     },
   },
@@ -50,5 +54,12 @@ export default defineNuxtConfig({
         },
       }),
     ],
+  },
+  runtimeConfig: {
+    public: {
+      host: process.env.HOST || 'localhost',
+      port: process.env.PORT || 6002,
+      apiURL: process.env.API_URL || '/api',
+    },
   },
 })

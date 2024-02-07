@@ -1,9 +1,9 @@
 <script setup lang="ts">
-
+import { orders } from '~/constants/data'
 </script>
 
 <template>
-  <h1>Intaro Site</h1>
+  <TableBasis :orders="orders" class="py-5" />
 </template>
 
 <style scoped>
