@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@vee-validate/nuxt',
     'nuxt-swiper',
+    '@pinia/nuxt',
   ],
   googleFonts: {
     families: {

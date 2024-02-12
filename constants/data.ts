@@ -55,4 +55,55 @@ const orders = [
   },
 ]
 
-export { orders }
+const employees = [
+  {
+    name: 'Владислав',
+    number: '+79192453490',
+    position: 'инжинер',
+  },
+  {
+    name: 'Константин',
+    number: '+79192453490',
+    position: 'техник',
+  },
+  {
+    name: 'Анастасия',
+    number: '+79192453234',
+    position: 'аналитик',
+  },
+  {
+    name: 'Марина',
+    number: '+79192453678',
+    position: 'дизайнер',
+  },
+  {
+    name: 'Алексей',
+    number: '+79192453567',
+    position: 'менеджер',
+  },
+]
+
+const users = [
+  {
+    name: 'Мария',
+    position: 'Преподаватель',
+    cathedra: 'Прикладная математика',
+  },
+  {
+    name: 'Александр',
+    position: 'Студент',
+    cathedra: 'Прикладная математика',
+  },
+  {
+    name: 'Елена',
+    position: 'Ассистент',
+    cathedra: 'Прикладная математика',
+  },
+  {
+    name: 'Иван',
+    position: 'Лаборант',
+    cathedra: 'Прикладная математика',
+  },
+]
+
+export { orders, employees, users }

@@ -65,7 +65,7 @@ function getLogo() {
           </li>
           <li>
             <NuxtLink
-              to="/"
+              to="/client"
               class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-blue"
             >
               Мои заявки
@@ -130,7 +130,7 @@ function getLogo() {
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink to="/" @click="openMenu">
+              <NuxtLink to="/client" @click="openMenu">
                 Мои заявки
               </NuxtLink>
             </li>
