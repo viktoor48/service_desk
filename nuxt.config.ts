@@ -3,6 +3,7 @@ import svgLoader from 'vite-svg-loader'
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  ssr: false,
   app: {
     head: {
       charset: 'utf-8',

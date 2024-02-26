@@ -6,6 +6,7 @@ interface Props {
   text: string
   type: 'tel' | 'email' | 'text' | 'password'
   theme?: 'dark' | 'light'
+  value?: string
 }
 
 const props = defineProps<Props>()
@@ -13,6 +14,7 @@ const props = defineProps<Props>()
 // Переменная errorMessage принимает в себя error-значение(string) после валидации - используется в showError и отоброжении ошибок
 // Переменная value связка через v-modal со значениями в input
 const { errorMessage, value: inputValue } = useField(props.name)
+inputValue.value = props.value
 // Переменная, которая используется при focus эффекте на input
 const isFocused = ref(false)
 // Используется, как индикатор отображение ошибок

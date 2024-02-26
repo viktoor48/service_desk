@@ -2,7 +2,7 @@
 
 <template>
   <td
-    class="border-y-[3px] border-solid border-white p-2 text-base"
+    class="border-y-[3px] border-solid border-white p-2 text-xxs"
   >
     <slot />
   </td>

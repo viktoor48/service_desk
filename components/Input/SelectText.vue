@@ -4,7 +4,7 @@ import { useField } from 'vee-validate'
 interface Props {
   name: string
   text: string
-  options: string[]
+  options?: string[]
   defaultValue?: string
   theme?: 'dark' | 'light'
 }

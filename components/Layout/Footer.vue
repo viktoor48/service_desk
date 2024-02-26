@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { useVfm } from 'vue-final-modal'
+import { useAuthStore } from '~/store/auth'
+
+const props = defineProps<Props>()
+
+const store = useAuthStore()
 
 interface Props {
   isInHeader?: boolean
   theme?: 'dark' | 'light'
 }
 
-const props = defineProps<Props>()
+const textButton = computed(() => {
+  return store.isLoggedIn ? 'Выйти' : 'Войти'
+})
 
 const vfm = useVfm()
 const StyleArr: Map<string, string> = new Map([['dark', 'bg-black text-white border-white'], ['default', 'bg-white text-black border-black']])
@@ -45,8 +52,8 @@ function getStyle() {
         </p>
       </div>
       <div class="fixed inset-x-4 bottom-5 z-[1] flex sm:inset-x-5 md:left-auto lg:hidden">
-        <Button class="w-full md:w-auto" @click="vfm.open('writeUsCompany')">
-          Какой-то текст
+        <Button class="w-full md:w-auto" @click="vfm.open('authorization')">
+          {{ textButton }}
         </Button>
       </div>
     </div>

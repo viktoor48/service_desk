@@ -4,11 +4,13 @@ import { useField } from 'vee-validate'
 interface Props {
   name: string
   text: string
+  value?: string
 }
 
 const props = defineProps<Props>()
 
 const { value: inputValue } = useField(props.name)
+inputValue.value = props.value
 
 const isFocused = ref(false)
 

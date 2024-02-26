@@ -13,6 +13,7 @@ function confirm() {
   <ModalsWriteUsCompany @confirm="confirm" />
   <ModalsAuthorization @confirm="confirm" />
   <ModalsClientCreateRequest @confirm="confirm" />
+  <ModalsEditRequest @confirm="confirm" />
   <ModalsConfirm />
 </template>
 

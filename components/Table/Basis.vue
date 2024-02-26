@@ -1,10 +1,24 @@
 <script setup lang="ts">
+import { useVfm } from 'vue-final-modal'
+import { userStore } from '~/store/user'
+import type { Order } from '~/types'
+
 const props = defineProps<{
   content: any[]
   headers?: string[]
 }>()
 
-const defaultHeaders = ['№', 'Статус', 'Приоритет', 'Наименование заявки', 'Заявитель', 'Исполнители', 'Изменена']
+const store = userStore()
+
+const vfm = useVfm()
+
+function openEditRequest(order: Order) {
+  console.log(order)
+  store.setTargetRequest(order)
+  vfm.open('editRequest')
+}
+
+const defaultHeaders = ['№', 'Статус', 'Приоритет', 'Наименование заявки', 'Заявитель', 'Исполнители', 'Описание', 'Изменена']
 const headersToUse = props.headers ?? defaultHeaders
 </script>
 
@@ -21,7 +35,7 @@ const headersToUse = props.headers ?? defaultHeaders
         </tr>
       </thead>
       <tbody>
-        <TableRow v-for="(order, ind) in props.content" :key="ind">
+        <TableRow v-for="(order, ind) in props.content" :key="ind" @click="openEditRequest(order)">
           <TableData v-for="(value, key) in order" :key="key">
             <NuxtLink class="cursor-pointer">
               {{ value }}
