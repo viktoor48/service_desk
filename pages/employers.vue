@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { employees } from '~/constants/data'
 import { useAuthStore } from '~/store/auth'
 
 const store = useAuthStore()
 const router = useRouter()
 
 const isLoading = ref(true);
-const requests = ref(null) as any;
+const employers = ref(null) as any;
 
 // Проверяем, является ли пользователь администратором
 (async () => {
@@ -16,21 +16,23 @@ const requests = ref(null) as any;
     isLoading.value = false // Устанавливаем isLoading в false, когда проверка завершена
 })()
 
-//Подгружаем заявки
-await store.loadRequests()
-requests.value = store.getRequests;
+//Подгружаем работников
+isLoading.value = true;
+await store.loadExecutors()
+employers.value = store.getExecutors;
+isLoading.value = false;
 
-const getRequests = computed(() => {
-  return requests.value;
+const getEmployers = computed(() => {
+  return employers.value;
 })
-console.log(requests.value);
+console.log(employers.value);
 </script>
 
 <template>
-  <div>
-    <Loading v-if="isLoading" />
-    <TableAdmin :requests="getRequests" class="py-5"/>
-  </div>
+  <Loading v-if="isLoading"/>
+  <TableEmployers v-else :employers="getEmployers" class="py-5"/>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>

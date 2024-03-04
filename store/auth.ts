@@ -7,10 +7,18 @@ export const useAuthStore = defineStore({
     user: localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')!) : null,
     role: 'admin',
     isAuthModalClosed: false,
+    allRequests: null,
+    allUsers: null,
+    testUser: null,
+    executors: null,
   }),
   getters: {
     isLoggedIn: state => !state.token, // изменить условие когда будет готова авторизация!
     getRole: state => state.role,
+    getRequests: state => state.allRequests,
+    getUser: state => state.testUser,
+    getExecutors: state => state.executors,
+    getUsers: state => state.allUsers,
   },
   actions: {
     async login(email: any, password: any) {
@@ -30,14 +38,41 @@ export const useAuthStore = defineStore({
       // Сохраняем данные пользователя в локальном хранилище
       localStorage.setItem('userData', JSON.stringify(data.user))
     },
-    async getRequests() {
+    async loadRequests() {
       const response = await fetch('http://62.217.178.20/requests', {
         headers: {
           'Content-Type': 'application/json',
         },
       })
       const data = await response.json()
-      console.log(data)
+      this.allRequests = data;
+    },
+    async loadUser() {
+      const response = await fetch('http://62.217.178.20/users/3', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await response.json()
+      this.testUser = data;
+    },
+    async loadUsers() {
+      const response = await fetch('http://62.217.178.20/users', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await response.json()
+      this.allUsers = data;
+    },
+    async loadExecutors() {
+      const response = await fetch('http://62.217.178.20/executors', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await response.json()
+      this.executors = data;
     },
     logout() {
       this.token = null

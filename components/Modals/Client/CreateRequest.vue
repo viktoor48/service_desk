@@ -5,7 +5,8 @@ import * as yup from 'yup'
 
 interface CreateRequestForm {
   requestTitle: string
-  requestDeclarer: string
+  requestBuilding: string
+  requestCabinet: string
   requestPriority: string
   requestDescription: string
 }
@@ -21,7 +22,8 @@ const vfm = useVfm()
 // Правила валидации полей
 const createRequestValidationSchema = yup.object().shape({
   requestTitle: yup.string().required().min(2, 'Минимум 2 символа'),
-  requestDeclarer: yup.string().required().min(2, 'Минимум 2 символа'),
+  requestCabinet: yup.string().required().min(1, 'Минимум 1 символ'),
+  requestBuilding: yup.string().required().min(1, 'Минимум 1 символ'),
   requestPriority: yup.string().required(),
   requestDescription: yup.string().max(190, 'Описание должно содержать максимум 190 символов'),
 })
@@ -95,11 +97,19 @@ function closeForm() {
           name="requestTitle"
           type="text"
           text="Название проблемы *"
+          placeholder="Сломался принтер"
         />
         <InputText
-          name="requestDeclarer"
+          name="requestCabinet"
           type="text"
-          text="Кабинет/Кафедра *"
+          text="Кабинет"
+          placeholder="327"
+        />
+        <InputText
+          name="requestBuilding"
+          type="text"
+          text="Корпус"
+          placeholder="1"
         />
         <InputSelectText
           name="requestPriority"

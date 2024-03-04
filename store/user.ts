@@ -4,7 +4,7 @@ import type { Order } from '~/types/index'
 export const userStore = defineStore({
   id: 'user',
   state: () => ({
-    targetRequest: null as Order | null,
+    targetRequest: null as any | null,
   }),
   getters: {
     getTargetRequest: state => state.targetRequest,

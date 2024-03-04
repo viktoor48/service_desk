@@ -22,7 +22,7 @@ const showError = ref(false)
 // Массив стилей для input
 const inputStyleArr: Map<string, string> = new Map([
   ['dark', 'bg-white/10 p-4'],
-  ['default', 'bg-gray p-5'],
+  ['default', 'bg-gray p-4'],
 ])
 // Массив стилей для span
 const spanStyleArr: Map<string, string> = new Map([
@@ -65,7 +65,7 @@ function getTranclateStylse() {
   <div class="group relative">
     <!-- Текст подсказка, которая выводится поверх input -->
     <span
-      class="text-gray-dark pointer-events-none absolute left-5 select-none duration-300"
+      class="text-gray-dark pointer-events-none relative left-1 select-none duration-300"
       :class="[getSpanStyles(), getTranclateStylse()]"
     >
       {{ text }}

@@ -7,6 +7,7 @@ interface Props {
   type: 'tel' | 'email' | 'text' | 'password'
   theme?: 'dark' | 'light'
   value?: string
+  placeholder?: string
 }
 
 const props = defineProps<Props>()
@@ -20,7 +21,7 @@ const isFocused = ref(false)
 // Используется, как индикатор отображение ошибок
 const showError = ref(false)
 // Массив стилей для input
-const inputStyleArr: Map<string, string> = new Map([['dark', 'bg-white/10 p-4'], ['default', 'bg-gray p-5']])
+const inputStyleArr: Map<string, string> = new Map([['dark', 'bg-white/10 p-4'], ['default', 'bg-gray p-4']])
 // Массив стилей для span
 const spanStyleArr: Map<string, string> = new Map([['dark', 'text-[14px]'], ['default', 'text-base']])
 // Массив стилей для анимации span
@@ -85,7 +86,7 @@ function getErrorMessageStyles() {
 <template>
   <div class="group relative">
     <!-- Текст подсказка, которая выводится поверх input -->
-    <span class="text-gray-dark pointer-events-none absolute left-5 select-none duration-300" :class="[getSpanStyles(), getTranclateStylse()]">
+    <span class="text-gray-dark pointer-events-none relative left-1 select-none duration-300" :class="[getSpanStyles(), getTranclateStylse()]">
       {{ text }}
     </span>
     <!-- validate-on-input используется, чтобы производить постоянную проверку валидации при первом ее провале -->
@@ -97,6 +98,7 @@ function getErrorMessageStyles() {
       class="w-full rounded-xl focus:outline-none"
       :class="[{ 'border border-red': !!errorMessage && showError }, getInputStyles()]"
       :name="name"
+      :placeholder="placeholder"
       @focus="isFocused = true"
       @blur="[isFocused = false, showError = !!errorMessage && !!inputValue]"
     >

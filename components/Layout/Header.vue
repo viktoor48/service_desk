@@ -80,10 +80,18 @@ const isAdminUser = computed(() => store.getRole === 'admin')
             </li>
             <li>
               <NuxtLink
-                to="/employees"
+                to="/employers"
                 class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-blue"
               >
                 Сотрудники
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/teachers"
+                class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-blue"
+              >
+                Преподаватели
               </NuxtLink>
             </li>
           </template>
@@ -161,8 +169,13 @@ const isAdminUser = computed(() => store.getRole === 'admin')
                 </NuxtLink>
               </li>
               <li>
-                <NuxtLink to="/employees" @click="openMenu">
+                <NuxtLink to="/employers" @click="openMenu">
                   Сотрудники
+                </NuxtLink>
+              </li>
+              <li>
+                <NuxtLink to="/teachers" @click="openMenu">
+                  Преподаватели
                 </NuxtLink>
               </li>
             </template>
