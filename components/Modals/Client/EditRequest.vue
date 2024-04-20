@@ -2,14 +2,14 @@
 import { VueFinalModal, useVfm } from 'vue-final-modal'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
-import { userStore } from '~/store/user'
+import { useAuthStore } from '~/store/auth'
 import { employees, priorityArray, statusArray } from '~/constants/data'
 
 const emit = defineEmits<{
   (e: 'confirm'): void
 }>()
 
-const store = userStore()
+const store = useAuthStore()
 
 interface CreateRequestForm {
   requestTitle?: string
@@ -28,7 +28,7 @@ const selectedRequest = computed(() => {
 })
 
 const getCurrentUser = computed(() => {
-  
+
 })
 
 watch(selectedRequest, (newValue, oldValue) => {

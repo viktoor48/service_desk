@@ -10,7 +10,7 @@ definePageMeta({
 const store = useAuthStore()
 const router = useRouter()
 
-const currentUser = ref(null) as any;
+const currentUser = ref(null) as any
 const isLoading = ref(true);
 
 (async () => {
@@ -23,16 +23,15 @@ const isLoading = ref(true);
 const order = [orders[0]]
 // const order = [] as any;
 
-//Подгружаем пользователя
-isLoading.value = true;
+// Подгружаем пользователя
+isLoading.value = true
 await store.loadUser()
-currentUser.value = store.getUser;
-isLoading.value = false;
+currentUser.value = store.getUser
+isLoading.value = false
 
 const getUser = computed(() => {
-  return currentUser.value;
+  return currentUser.value
 })
-
 </script>
 
 <template>

@@ -2,14 +2,14 @@
 import { VueFinalModal, useVfm } from 'vue-final-modal'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
-import { userStore } from '~/store/user'
-import { employees, priorityArray, statusArray } from '~/constants/data'
+import { useAuthStore } from '~/store/auth'
+import { employees } from '~/constants/data'
 
 const emit = defineEmits<{
   (e: 'confirm'): void
 }>()
 
-const store = userStore()
+const store = useAuthStore()
 
 interface CreateRequestForm {
   requestTitle?: string
@@ -138,24 +138,18 @@ function closeForm() {
       </div>
       <div class="mt-7 flex flex-col gap-2.5">
         <!-- Поля, который проходят валидацию: Имя, телефон, почта, название компании -->
-        <InputText name="requestTitle" :value="selectedRequest?.type_request_title" type="text" text="Название проблемы *" />
+        <InputText name="requestTitle" :value="selectedRequest?.typeRequest.name" type="text" text="Название проблемы *" />
         <InputText
           name="requestCabinet"
           type="text"
           text="Кабинет"
-          :value="selectedRequest?.cabinet_number"
+          :value="selectedRequest?.cabinet"
         />
         <InputText
           name="requestBuilding"
           type="text"
           text="Корпус"
-          :value="selectedRequest?.building_number"
-        />
-        <InputSelectText
-          name="requestPriority"
-          text="Приоритет *"
-          :options="priorityArray"
-          :default-value="selectedRequest?.priority"
+          :value="selectedRequest?.numberBuilding"
         />
         <InputText
           name="requestStatus"
@@ -169,11 +163,12 @@ function closeForm() {
           :options="statusArray"
           :default-value="selectedRequest?.status"
         /> -->
-        <InputText 
-          name="requestExecutor" 
-          :value="selectedRequest?.executors.map((executor : any) => `${executor.last_name} ${executor.first_name}`).join(', ')" 
-          type="text" 
-          text="Исполнители" />
+        <InputText
+          name="requestExecutor"
+          :value="selectedRequest?.workers.map((executor : any) => `${executor.lastName} ${executor.name}`).join(', ')"
+          type="text"
+          text="Исполнители"
+        />
         <!-- Опциональные поля: -->
         <InputTextArea
           name="requestDescription"

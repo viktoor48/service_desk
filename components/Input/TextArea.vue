@@ -29,9 +29,9 @@ const isActive = computed(() => {
       v-model="inputValue"
       class="h-[120px] w-full resize-none rounded-xl bg-gray p-4 focus:outline-none"
       maxlength="190"
+      :placeholder="placeholder"
       @focus="isFocused = true"
       @blur="isFocused = false"
-      :placeholder="placeholder"
     />
   </div>
 </template>

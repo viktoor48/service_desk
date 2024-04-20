@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { useVfm } from "vue-final-modal";
-import { userStore } from "~/store/user";
+import { useVfm } from 'vue-final-modal'
+import { userStore } from '~/store/user'
 
 const props = defineProps<{
-  employers: any[];
-}>();
+  employers: any[]
+}>()
 
-const store = userStore();
+const store = userStore()
 
-const vfm = useVfm();
+const vfm = useVfm()
 
 // function openEditRequest(employer: employer) {
 //   console.log(employer);
@@ -17,20 +17,19 @@ const vfm = useVfm();
 // }
 
 const defaultHeaders = [
-  "№",
-  "Фамилия",
-  "Имя",
-  "Отчество",
-  "Номер телефона",
-  "Должность",
-];
-
+  '№',
+  'Фамилия',
+  'Имя',
+  'Отчество',
+  'Номер телефона',
+  'Должность',
+]
 </script>
 
 <template>
   <div>
     <table
-      class="mb-5 w-full bemployer-collapse bemployer-b-[3px] bemployer-solid bemployer-[#fffff] bg-white text-base"
+      class="bemployer-collapse bemployer-b-[3px] bemployer-solid bemployer-[#fffff] mb-5 w-full bg-white text-base"
     >
       <thead>
         <tr>

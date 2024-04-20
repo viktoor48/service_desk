@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { employees } from '~/constants/data'
 import { useAuthStore } from '~/store/auth'
 
 const store = useAuthStore()
 const router = useRouter()
 
-const isLoading = ref(true);
+const isLoading = ref(true)
 const employers = ref(null) as any;
 
 // Проверяем, является ли пользователь администратором
@@ -16,21 +15,21 @@ const employers = ref(null) as any;
     isLoading.value = false // Устанавливаем isLoading в false, когда проверка завершена
 })()
 
-//Подгружаем работников
-isLoading.value = true;
+// Подгружаем работников
+isLoading.value = true
 await store.loadExecutors()
-employers.value = store.getExecutors;
-isLoading.value = false;
+employers.value = store.getExecutors
+isLoading.value = false
 
 const getEmployers = computed(() => {
-  return employers.value;
+  return employers.value
 })
-console.log(employers.value);
+console.log(employers.value)
 </script>
 
 <template>
-  <Loading v-if="isLoading"/>
-  <TableEmployers v-else :employers="getEmployers" class="py-5"/>
+  <Loading v-if="isLoading" />
+  <TableEmployers v-else :employers="getEmployers" class="py-5" />
 </template>
 
 <style scoped>

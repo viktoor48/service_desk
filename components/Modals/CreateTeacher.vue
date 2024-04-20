@@ -1,48 +1,48 @@
 <script setup lang="ts">
-import { VueFinalModal, useVfm } from "vue-final-modal";
-import { useForm } from "vee-validate";
-import * as yup from "yup";
+import { VueFinalModal, useVfm } from 'vue-final-modal'
+import { useForm } from 'vee-validate'
+import * as yup from 'yup'
 
 interface CreateRequestForm {
-  requestFirstName: string;
-  requesLastName: string;
-  requesPatronymic: string;
-  requestBuilding: string;
-  requestCabinet: string;
-  requestEmail: string;
-  requestPassword: string;
+  requestFirstName: string
+  requesLastName: string
+  requesPatronymic: string
+  requestBuilding: string
+  requestCabinet: string
+  requestEmail: string
+  requestPassword: string
 }
 
+const emit = defineEmits<{
+  (e: 'confirm'): void
+}>()
+
 const getPassword = computed(() => {
-  const uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
-  const numbers = "0123456789";
+  const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  const lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz'
+  const numbers = '0123456789'
 
-  const allCharacters = uppercaseLetters + lowercaseLetters + numbers;
+  const allCharacters = uppercaseLetters + lowercaseLetters + numbers
 
-  let newPassword = "";
+  let newPassword = ''
 
   // Генерируем по одному символу из каждой категории символов
-  newPassword +=
-    uppercaseLetters[Math.floor(Math.random() * uppercaseLetters.length)];
-  newPassword +=
-    lowercaseLetters[Math.floor(Math.random() * lowercaseLetters.length)];
-  newPassword += numbers[Math.floor(Math.random() * numbers.length)];
+  newPassword
+    += uppercaseLetters[Math.floor(Math.random() * uppercaseLetters.length)]
+  newPassword
+    += lowercaseLetters[Math.floor(Math.random() * lowercaseLetters.length)]
+  newPassword += numbers[Math.floor(Math.random() * numbers.length)]
 
   // Затем добавляем оставшиеся символы, чтобы добиться длины 12 символов
   for (let i = 3; i < 12; i++) {
-    const randomIndex = Math.floor(Math.random() * allCharacters.length);
-    newPassword += allCharacters[randomIndex];
+    const randomIndex = Math.floor(Math.random() * allCharacters.length)
+    newPassword += allCharacters[randomIndex]
   }
 
-  return newPassword;
-});
+  return newPassword
+})
 
-const emit = defineEmits<{
-  (e: "confirm"): void;
-}>();
-
-const vfm = useVfm();
+const vfm = useVfm()
 
 // Правила валидации полей
 const createRequestValidationSchema = yup.object().shape({
@@ -51,78 +51,79 @@ const createRequestValidationSchema = yup.object().shape({
     .required()
     .matches(
       /^[а-яА-ЯёЁa-zA-Z]+$/,
-      "Фамилия должна содержать только русские или английские буквы"
+      'Фамилия должна содержать только русские или английские буквы',
     ),
   requestLastName: yup
     .string()
     .required()
     .matches(
       /^[а-яА-ЯёЁa-zA-Z]+$/,
-      "Имя должно содержать только русские или английские буквы"
+      'Имя должно содержать только русские или английские буквы',
     ),
   requestPatronymic: yup
     .string()
     .matches(
       /^[а-яА-ЯёЁa-zA-Z]+$/,
-      "Отчество должно содержать только русские или английские буквы"
+      'Отчество должно содержать только русские или английские буквы',
     ),
-  requestCabinet: yup.string().required().min(1, "Минимум 1 символ"),
-  requestBuilding: yup.string().required().min(1, "Минимум 1 символ"),
+  requestCabinet: yup.string().required().min(1, 'Минимум 1 символ'),
+  requestBuilding: yup.string().required().min(1, 'Минимум 1 символ'),
   requestEmail: yup.string().required().email(),
   requestPassword: yup
     .string()
     .required()
-    .min(8, "Пароль должен содержать минимум 8 символов")
+    .min(8, 'Пароль должен содержать минимум 8 символов')
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/,
-      "Пароль должен содержать хотя бы одну заглавную букву, одну строчную букву и одну цифру"
+      'Пароль должен содержать хотя бы одну заглавную букву, одну строчную букву и одну цифру',
     ),
-});
+})
 
 const { values, meta } = useForm<CreateRequestForm>({
   validationSchema: createRequestValidationSchema,
-});
-const isLoading = ref<boolean>(false);
-const apiURL = useRuntimeConfig().public.apiURL;
-const requestErrorMessage = ref<string>("");
+})
+const isLoading = ref<boolean>(false)
+const apiURL = useRuntimeConfig().public.apiURL
+const requestErrorMessage = ref<string>('')
 
 const isEnabled = computed(() => {
-  return meta.value.valid && !isLoading.value;
-});
+  return meta.value.valid && !isLoading.value
+})
 
 function sendForm() {
-  isLoading.value = true;
-  const requestBody = new FormData();
+  isLoading.value = true
+  const requestBody = new FormData()
 
   Object.entries(values).forEach(([key, value]) => {
-    requestBody.append(key, value);
-  });
+    requestBody.append(key, value)
+  })
 
   fetch(`${apiURL}/createTeacher`, {
-    method: "POST",
+    method: 'POST',
     body: requestBody,
   })
     .then((response) => {
       if (response.ok) {
-        vfm.close("createTeacher");
-        emit("confirm");
-      } else {
-        throw new Error("response not ok");
+        vfm.close('createTeacher')
+        emit('confirm')
+      }
+      else {
+        throw new Error('response not ok')
       }
     })
     .catch(() => {
-      requestErrorMessage.value =
-        "Не удалось отправить сообщение, попробуйте позднее.";
+      requestErrorMessage.value
+        = 'Не удалось отправить сообщение, попробуйте позднее.'
     })
     .finally(() => {
-      isLoading.value = false;
-    });
+      isLoading.value = false
+    })
 }
 
 function closeForm() {
-  requestErrorMessage.value = "";
-  isLoading.value = false;
-  vfm.close("CreateTeacher");
+  requestErrorMessage.value = ''
+  isLoading.value = false
+  vfm.close('CreateTeacher')
 }
 </script>
 

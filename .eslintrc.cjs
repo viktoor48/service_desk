@@ -7,5 +7,6 @@ module.exports = {
   rules: {
     'n/prefer-global/process': 'off',
     'tailwindcss/no-custom-classname': 'off',
+    'no-console': 'off',
   },
 }

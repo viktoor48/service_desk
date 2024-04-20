@@ -40,34 +40,31 @@ const isEnabled = computed(() => {
   return meta.value.valid && !isLoading.value
 })
 
-function sendForm() {
+async function sendForm() {
   isLoading.value = true
-  const requestBody = new FormData()
 
-  Object.entries(values).forEach(([key, value]) => {
-    requestBody.append(key, value)
-  })
+  const login = values.userEmail // Получить значение поля email
+  const password = values.userPassword // Получить значение поля pas
+  console.log(login, password)
 
-  fetch(`${apiURL}/user`, {
-    method: 'POST',
-    body: requestBody,
-  })
-    .then((response) => {
-      if (response.ok) {
-        vfm.close('authorization')
-        emit('confirm')
-      }
-      else {
-        throw new Error('response not ok')
-      }
-    })
-    .catch(() => {
-      requestErrorMessage.value
+  try {
+    const isSuccess = await store.login(login, password)
+
+    if (isSuccess) {
+      vfm.close('authorization')
+      emit('confirm')
+    }
+    else {
+      throw new Error('response not ok')
+    }
+  }
+  catch (e) {
+    requestErrorMessage.value
         = 'Не удалось авторизоваться, попробуйте другие данные.'
-    })
-    .finally(() => {
-      isLoading.value = false
-    })
+  }
+  finally {
+    isLoading.value = false
+  }
 }
 
 function closeForm() {

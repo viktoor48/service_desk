@@ -1,40 +1,39 @@
 <script setup lang="ts">
-import { useVfm } from "vue-final-modal";
-import { userStore } from "~/store/user";
-import type { Order } from "~/types";
-import { getFormttedDate } from "~/composables";
+import { useVfm } from 'vue-final-modal'
+import { userStore } from '~/store/user'
+import type { Order } from '~/types'
+import { getFormttedDate } from '~/composables'
 
 const props = defineProps<{
-  user: any;
-}>();
+  user: any
+}>()
 
-const store = userStore();
+const store = userStore()
 
-const vfm = useVfm();
+const vfm = useVfm()
 
 function openEditRequest(order: Order) {
-  console.log(order);
-  store.setTargetRequest(order);
-  vfm.open("ClientEditRequest");
+  console.log(order)
+  store.setTargetRequest(order)
+  vfm.open('ClientEditRequest')
 }
 
 const defaultHeaders = [
-  "№",
-  "Статус",
-  "Приоритет",
-  "Наименование заявки",
-  "Заявитель",
-  "Описание",
-  "Создана",
-];
+  '№',
+  'Статус',
+  'Приоритет',
+  'Наименование заявки',
+  'Заявитель',
+  'Описание',
+  'Создана',
+]
 
 function truncateDescription(description: string): string {
-  const maxLength = 60;
-  if (description.length > maxLength) {
-    return `${description.substring(0, maxLength)}...`;
-  } else {
-    return description;
-  }
+  const maxLength = 60
+  if (description.length > maxLength)
+    return `${description.substring(0, maxLength)}...`
+  else
+    return description
 }
 </script>
 
@@ -67,7 +66,9 @@ function truncateDescription(description: string): string {
             </NuxtLink>
           </TableData>
           <TableData>
-            <NuxtLink class="cursor-pointer"> приоритет ? </NuxtLink>
+            <NuxtLink class="cursor-pointer">
+              приоритет ?
+            </NuxtLink>
           </TableData>
           <TableData>
             <NuxtLink class="cursor-pointer">

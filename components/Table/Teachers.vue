@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { useVfm } from "vue-final-modal";
-import { userStore } from "~/store/user";
+import { useVfm } from 'vue-final-modal'
+import { userStore } from '~/store/user'
 
 const props = defineProps<{
-    teachers: any[];
-}>();
+  teachers: any[]
+}>()
 
-const store = userStore();
+const store = userStore()
 
-const vfm = useVfm();
+const vfm = useVfm()
 
 // function openEditRequest(teachers: teachers) {
 //   console.log(teachers);
@@ -17,20 +17,19 @@ const vfm = useVfm();
 // }
 
 const defaultHeaders = [
-  "№",
-  "Фамилия",
-  "Имя",
-  "Отчество",
-  "Кафедра",
-  "Факультет",
-];
-
+  '№',
+  'Фамилия',
+  'Имя',
+  'Отчество',
+  'Кафедра',
+  'Факультет',
+]
 </script>
 
 <template>
   <div>
     <table
-      class="mb-5 w-full bteachers-collapse bteachers-b-[3px] bteachers-solid bteachers-[#fffff] bg-white text-base"
+      class="bteachers-collapse bteachers-b-[3px] bteachers-solid bteachers-[#fffff] mb-5 w-full bg-white text-base"
     >
       <thead>
         <tr>
