@@ -5,20 +5,22 @@ const store = useAuthStore()
 const router = useRouter()
 
 const isLoading = ref(true)
-const employers = ref(null) as any;
+const employers = ref(null) as any
+const user = store.getUser.user;
 
 // Проверяем, является ли пользователь администратором
 (async () => {
-  if (store.getRole !== 'admin')
+  if (!user.roles.includes('Админ'))
     await router.push('/client')
+
   else
-    isLoading.value = false // Устанавливаем isLoading в false, когда проверка завершена
+    isLoading.value = false
 })()
 
 // Подгружаем работников
 isLoading.value = true
-await store.loadExecutors()
-employers.value = store.getExecutors
+await store.fetchWorkers()
+employers.value = store.getWorkers
 isLoading.value = false
 
 const getEmployers = computed(() => {

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useVfm } from 'vue-final-modal'
-import { userStore } from '~/store/user'
+import { useAuthStore } from '~/store/auth'
 
 const props = defineProps<{
   employers: any[]
 }>()
 
-const store = userStore()
+const store = useAuthStore()
 
 const vfm = useVfm()
 
@@ -21,7 +21,6 @@ const defaultHeaders = [
   'Фамилия',
   'Имя',
   'Отчество',
-  'Номер телефона',
   'Должность',
 ]
 </script>
@@ -50,12 +49,12 @@ const defaultHeaders = [
           </TableData>
           <TableData>
             <NuxtLink class="cursor-pointer">
-              {{ employer.last_name }}
+              {{ employer.lastName }}
             </NuxtLink>
           </TableData>
           <TableData>
             <NuxtLink class="cursor-pointer">
-              {{ employer.first_name }}
+              {{ employer.name }}
             </NuxtLink>
           </TableData>
           <TableData>
@@ -65,14 +64,9 @@ const defaultHeaders = [
               }}
             </NuxtLink>
           </TableData>
-          <TableData>
-            <NuxtLink class="cursor-pointer">
-              {{ employer.phone_number }}
-            </NuxtLink>
-          </TableData>
           <TableData class="max-w-[200px]">
             <NuxtLink class="cursor-pointer">
-              {{ employer.posts.map((post:any) => `${post.title}`).join(', ') }}
+              {{ employer.post }}
             </NuxtLink>
           </TableData>
         </TableRow>

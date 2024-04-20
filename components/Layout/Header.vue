@@ -210,4 +210,9 @@ const isAdminUser = computed(() => store.getRole === 'admin')
 .underline-animation {
   @apply after:bg-blue after:h-0.5 after:w-full after:absolute after:left-0 after:bottom-0 after:-translate-y-1 after:transition after:duration-300 after:opacity-0 hover:after:translate-y-0 hover:after:opacity-100;
 }
+
+.router-link-active,
+.NuxtLink--exact-active {
+  @apply text-blue;
+}
 </style>

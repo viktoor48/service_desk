@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useVfm } from 'vue-final-modal'
-import { userStore } from '~/store/user'
+import { useAuthStore } from '~/store/auth'
 
 const props = defineProps<{
   teachers: any[]
 }>()
 
-const store = userStore()
+const store = useAuthStore()
 
 const vfm = useVfm()
 
@@ -50,12 +50,12 @@ const defaultHeaders = [
           </TableData>
           <TableData>
             <NuxtLink class="cursor-pointer">
-              {{ teachers.last_name }}
+              {{ teachers.lastName }}
             </NuxtLink>
           </TableData>
           <TableData>
             <NuxtLink class="cursor-pointer">
-              {{ teachers.first_name }}
+              {{ teachers.name }}
             </NuxtLink>
           </TableData>
           <TableData>

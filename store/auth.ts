@@ -3,7 +3,6 @@ import { defineStore } from 'pinia'
 export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({
-    token: localStorage.getItem('authToken') || null,
     user: localStorage.getItem('userData')
       ? JSON.parse(localStorage.getItem('userData')!)
       : null,
@@ -11,8 +10,8 @@ export const useAuthStore = defineStore({
     isAuthModalClosed: false,
     allRequests: null,
     allUsers: null,
-    testUser: null,
-    executors: null,
+    teachers: null,
+    workers: null,
     targetRequest: null as any | null,
   }),
   getters: {
@@ -20,9 +19,10 @@ export const useAuthStore = defineStore({
     getRole: state => state.role,
     getRequests: state => state.allRequests,
     getUser: state => state.user,
-    getExecutors: state => state.executors,
+    getWorkers: state => state.workers,
     getUsers: state => state.allUsers,
     getTargetRequest: state => state.targetRequest,
+    getTeachers: state => state.teachers,
   },
   actions: {
     setTargetRequest(order: any) {
@@ -77,6 +77,29 @@ export const useAuthStore = defineStore({
         console.error('Произошла ошибка:', error.message)
       }
     },
+    async createTeacher(data: any) {
+      try {
+        const response = await fetch('http://localhost:8000/create/teacher', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+
+        if (!response.ok)
+          throw new Error('Failed to create teacher')
+
+        const responseData = await response.json()
+        console.log(responseData)
+
+        return responseData
+      }
+      catch (error) {
+        console.error('Error creating teacher:', error)
+        throw error
+      }
+    },
     async fetchRequests() {
       try {
         const response = await fetch('http://localhost:8000/get/requests', {
@@ -95,14 +118,23 @@ export const useAuthStore = defineStore({
         console.log(e.message)
       }
     },
-    async loadUser() {
-      const response = await fetch('http://62.217.178.20/users/3', {
+    async fetchWorkers() {
+      const response = await fetch('http://localhost:8000/api/workers', {
         headers: {
           'Content-Type': 'application/json',
         },
       })
       const data = await response.json()
-      this.testUser = data
+      this.workers = data['hydra:member']
+    },
+    async fetchTeachers() {
+      const response = await fetch('http://localhost:8000/api/teachers', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await response.json()
+      this.teachers = data['hydra:member']
     },
     async loadUsers() {
       const response = await fetch('http://62.217.178.20/users', {
@@ -113,37 +145,12 @@ export const useAuthStore = defineStore({
       const data = await response.json()
       this.allUsers = data
     },
-    async loadExecutors() {
-      const response = await fetch('http://62.217.178.20/executors', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await response.json()
-      this.executors = data
-    },
     logout() {
-      this.token = null
       this.user = null
-      // Удаляем данные из локального хранилища при выходе
-      localStorage.removeItem('authToken')
       localStorage.removeItem('userData')
     },
     setAuthModalClosed(value: boolean) {
       this.isAuthModalClosed = value
-    },
-    async loadUserData() {
-      // Загружаем данные пользователя из API
-      const response = await fetch('/api/userData', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      })
-      const userData = await response.json()
-      // Сохраняем данные пользователя в хранилище
-      this.user = userData
-      localStorage.setItem('userData', JSON.stringify(userData))
     },
   },
 })

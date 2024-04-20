@@ -7,19 +7,22 @@ const router = useRouter()
 const vfm = useVfm()
 
 const isLoading = ref(true)
-const teachers = ref(null) as any;
+const teachers = ref(null) as any
+const user = store.getUser.user;
 
 // Проверяем, является ли пользователь администратором
 (async () => {
-  if (store.getRole !== 'admin')
+  if (!user.roles.includes('Админ'))
     await router.push('/client')
-  else isLoading.value = false // Устанавливаем isLoading в false, когда проверка завершена
+
+  else
+    isLoading.value = false
 })()
 
 // Подгружаем работников
 isLoading.value = true
-await store.loadUsers()
-teachers.value = store.getUsers
+await store.fetchTeachers()
+teachers.value = store.getTeachers
 isLoading.value = false
 
 const getTeachers = computed(() => {
