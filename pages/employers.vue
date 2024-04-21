@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useVfm } from 'vue-final-modal'
 import { useAuthStore } from '~/store/auth'
 
+const vfm = useVfm()
 const store = useAuthStore()
 const router = useRouter()
 
@@ -30,6 +32,11 @@ console.log(employers.value)
 </script>
 
 <template>
+  <div>
+    <Button class="mt-5" @click="vfm.open('CreateWorker')">
+      Зарегестрировать сотрудника
+    </Button>
+  </div>
   <Loading v-if="isLoading" />
   <TableEmployers v-else :employers="getEmployers" class="py-5" />
 </template>

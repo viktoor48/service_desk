@@ -100,6 +100,29 @@ export const useAuthStore = defineStore({
         throw error
       }
     },
+    async createWorker(data: any) {
+      try {
+        const response = await fetch('http://localhost:8000/create/worker', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+
+        if (!response.ok)
+          throw new Error('Failed to create teacher')
+
+        const responseData = await response.json()
+        console.log(responseData)
+
+        return responseData
+      }
+      catch (error) {
+        console.error('Error creating teacher:', error)
+        throw error
+      }
+    },
     async fetchRequests() {
       try {
         const response = await fetch('http://localhost:8000/get/requests', {

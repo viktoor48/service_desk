@@ -15,6 +15,7 @@ function confirm() {
   <ModalsClientCreateRequest @confirm="confirm" />
   <ModalsEditRequest @confirm="confirm" />
   <ModalsClientEditRequest' @confirm="confirm" />
+  <ModalsCreateWorker @confirm="confirm" />
   <ModalsAdminEditRequest @confirm="confirm" />
   <ModalsCreateTeacher @confirm="confirm" />
   <ModalsConfirm />

@@ -4,7 +4,7 @@ import { useField } from 'vee-validate'
 interface Props {
   name: string
   text: string
-  type: 'tel' | 'email' | 'text' | 'password'
+  type: 'tel' | 'email' | 'text' | 'password' | 'number'
   theme?: 'dark' | 'light'
   value?: string
   placeholder?: string
@@ -56,6 +56,8 @@ const maskPattern = computed(() => {
       return '+7 (###) ###-##-##'
     case 'text':
       return 'B'
+    case 'number':
+      return '###'
   }
   return 'A'
 })

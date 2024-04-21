@@ -5,14 +5,12 @@ import * as yup from 'yup'
 import { useAuthStore } from '~/store/auth'
 
 interface CreateRequestForm {
+  requestEmail: string
+  requestPassword: string
   requestFirstName: string
   requestLastName: string
   requestPatronymic: string
-  requestFaculty: string
-  requestDepartment: string
-  requestEmail: string
-  requestPassword: string
-  requestPhone: string
+  requestPost: string
 }
 
 const emit = defineEmits<{
@@ -20,6 +18,8 @@ const emit = defineEmits<{
 }>()
 
 const store = useAuthStore()
+
+const requestIsAdminRole = ref(false)
 
 const getPassword = computed(() => {
   const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -70,13 +70,7 @@ const createRequestValidationSchema = yup.object().shape({
       /^[а-яА-ЯёЁa-zA-Z]+$/,
       'Отчество должно содержать только русские или английские буквы',
     ),
-  requestFaculty: yup
-    .string()
-    .matches(
-      /^[а-яА-ЯёЁa-zA-Z\s]+$/,
-      'только русские или английские буквы',
-    ),
-  requestDepartment: yup
+  requestPost: yup
     .string()
     .matches(
       /^[а-яА-ЯёЁa-zA-Z\s]+$/,
@@ -96,6 +90,7 @@ const createRequestValidationSchema = yup.object().shape({
 const { values, meta } = useForm<CreateRequestForm>({
   validationSchema: createRequestValidationSchema,
 })
+
 const isLoading = ref<boolean>(false)
 const apiURL = useRuntimeConfig().public.apiURL
 const requestErrorMessage = ref<string>('')
@@ -107,19 +102,19 @@ const isEnabled = computed(() => {
 async function sendForm() {
   isLoading.value = true
 
-  const teacherData = {
-    phone: values.requestPhone,
+  const workerData = {
     name: values.requestFirstName,
     lastName: values.requestLastName,
     patronymic: values.requestPatronymic,
     login: values.requestEmail,
     password: values.requestPassword,
-    department: values.requestDepartment,
-    faculty: values.requestFaculty,
+    isAdminRole: requestIsAdminRole.value,
+    post: values.requestPost,
   }
+  console.log(workerData)
 
   try {
-    const isSuccess = await store.createTeacher(teacherData)
+    const isSuccess = await store.createWorker(workerData)
 
     if (isSuccess) {
       closeForm()
@@ -134,7 +129,7 @@ async function sendForm() {
   }
   finally {
     isLoading.value = false
-    await store.fetchTeachers()
+    await store.fetchWorkers()
     window.location.reload()
   }
 }
@@ -142,13 +137,13 @@ async function sendForm() {
 function closeForm() {
   requestErrorMessage.value = ''
   isLoading.value = false
-  vfm.close('CreateTeacher')
+  vfm.close('CreateWorker')
 }
 </script>
 
 <template>
   <VueFinalModal
-    modal-id="CreateTeacher"
+    modal-id="CreateWorker"
     content-class="fixed h-full overflow-y-auto inset-0 sm:rounded-3xl bg-white p-10 md:bottom-auto md:left-1/2 md:right-auto md:top-1/2 md:w-[640px] md:-translate-x-1/2 md:-translate-y-1/2"
   >
     <form @submit.prevent="sendForm">
@@ -159,7 +154,7 @@ function closeForm() {
         <p
           class="text-center font-title text-title-sm font-bold sm:text-title-md"
         >
-          Регистрация преподавателя
+          Регистрация сотрудника
         </p>
         <button
           type="button"
@@ -182,19 +177,9 @@ function closeForm() {
         <InputText name="requestFirstName" type="text" text="Имя *" />
         <InputText name="requestPatronymic" type="text" text="Отчество" />
         <InputText
-          name="requestFaculty"
+          name="requestPost"
           type="text"
-          text="Факультет"
-        />
-        <InputText
-          name="requestDepartment"
-          type="text"
-          text="Кафедра"
-        />
-        <InputText
-          name="requestPhone"
-          type="tel"
-          text="Телефон"
+          text="Должность"
         />
         <InputText name="requestEmail" type="email" text="Почта" />
         <InputText
@@ -203,6 +188,10 @@ function closeForm() {
           text="Пароль"
           :value="getPassword"
         />
+        <div class="flex gap-2">
+          <input v-model="requestIsAdminRole" type="checkbox">
+          <div>Выдать права админа</div>
+        </div>
         <Button
           :loading="isLoading"
           :disabled="!isEnabled"
@@ -213,12 +202,6 @@ function closeForm() {
         </Button>
         <p v-if="requestErrorMessage.length" class="text-red">
           {{ requestErrorMessage }}
-        </p>
-        <p class="mx-1 text-sm">
-          Нажимая на кнопку, вы подтверждаете согласие на
-          <NuxtLink to="#">
-            <span class="text-red"> обработку персональных данных </span>
-          </NuxtLink>
         </p>
       </div>
     </form>
