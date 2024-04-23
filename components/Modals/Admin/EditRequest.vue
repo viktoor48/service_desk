@@ -3,13 +3,13 @@ import { VueFinalModal, useVfm } from 'vue-final-modal'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { useAuthStore } from '~/store/auth'
-import { employees } from '~/constants/data'
 
 const emit = defineEmits<{
   (e: 'confirm'): void
 }>()
 
 const store = useAuthStore()
+const employers = ref()
 
 interface CreateRequestForm {
   requestTitle?: string
@@ -27,23 +27,25 @@ const selectedRequest = computed(() => {
   return store.getTargetRequest
 })
 
+const executors = ref()
+
 watch(selectedRequest, (newValue, oldValue) => {
-  console.log('New value:', newValue)
+  executors.value = newValue.workers
+  console.log(executors)
 })
 
-// Получение списка работников из стора
-const getWorkers = computed(() => {
-  // return store.getWorkers;
-  return employees
-})
+await store.fetchWorkers()
+employers.value = store.getWorkers
 
-const getExecutors = computed(() => {
-
+const getEmployers = computed(() => {
+  return employers.value
 })
 
 function getEmployersName() {
-  return getWorkers.value.map(worker => worker.name)
+  return getEmployers.value.map((worker: any) => worker.name)
 }
+
+const statusArray = ['Новая', 'В работе', 'Закрыта', 'Ожидание']
 
 // Правила валидации полей
 const createRequestValidationSchema = yup.object().shape({
@@ -104,6 +106,36 @@ function closeForm() {
   isLoading.value = false
   vfm.close('AdminEditRequest')
 }
+
+const getExecutors = computed(() => {
+  return executors.value
+    .map((executor: any) => `${executor.lastName} ${executor.name}`)
+    .join(', ')
+})
+console.log(getExecutors)
+
+// Функция добавления работника в список исполнителей
+function addWorker(worker: any) {
+  executors.value.push(worker)
+}
+
+const searchText = ref('')
+
+const filteredWorkers = computed(() => {
+  if (!searchText.value.trim()) {
+    return getEmployers.value
+  }
+  else {
+    return getEmployers.value.filter(
+      (worker: any) =>
+        worker.name.toLowerCase().includes(searchText.value)
+        || worker.lastName.toLowerCase().includes(searchText.value)
+        || worker.patronymic.toLowerCase().includes(searchText.value),
+    )
+  }
+})
+
+const isShowWorkers = ref(false)
 </script>
 
 <template>
@@ -138,7 +170,12 @@ function closeForm() {
       </div>
       <div class="mt-7 flex flex-col gap-2.5">
         <!-- Поля, который проходят валидацию: Имя, телефон, почта, название компании -->
-        <InputText name="requestTitle" :value="selectedRequest?.typeRequest.name" type="text" text="Название проблемы *" />
+        <InputText
+          name="requestTitle"
+          :value="selectedRequest?.typeRequest.name"
+          type="text"
+          text="Название проблемы *"
+        />
         <InputText
           name="requestCabinet"
           type="text"
@@ -151,24 +188,70 @@ function closeForm() {
           text="Корпус"
           :value="selectedRequest?.numberBuilding"
         />
-        <InputText
-          name="requestStatus"
-          type="text"
-          text="Статус"
-          :value="selectedRequest?.status"
-        />
-        <!-- <InputSelectText
+        <InputSelectText
           name="requestStatus"
           text="Статус"
           :options="statusArray"
           :default-value="selectedRequest?.status"
-        /> -->
-        <InputText
-          name="requestExecutor"
-          :value="selectedRequest?.workers.map((executor : any) => `${executor.lastName} ${executor.name}`).join(', ')"
-          type="text"
-          text="Исполнители"
         />
+        <div class="group relative">
+          <span
+            class="text-gray-dark pointer-events-none relative left-1 select-none text-sm duration-300"
+          >
+            Исполнители
+          </span>
+          <input
+            v-model="getExecutors"
+            type="text"
+            class="mb-4 w-full rounded-xl bg-gray p-4 focus:outline-none"
+          >
+        </div>
+        <div class="relative">
+          <input
+            v-model="searchText"
+            type="text"
+            placeholder="Поиск работника"
+            class="border-gray-300 mb-4 w-full rounded border p-2"
+          >
+          <div
+            class="absolute right-0 top-[4px] cursor-pointer p-1"
+            @click="isShowWorkers = !isShowWorkers"
+          >
+            <svg
+              width="30px"
+              height="30px"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              stroke="#999999"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0" />
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M12.7071 14.7071C12.3166 15.0976 11.6834 15.0976 11.2929 14.7071L6.29289 9.70711C5.90237 9.31658 5.90237 8.68342 6.29289 8.29289C6.68342 7.90237 7.31658 7.90237 7.70711 8.29289L12 12.5858L16.2929 8.29289C16.6834 7.90237 17.3166 7.90237 17.7071 8.29289C18.0976 8.68342 18.0976 9.31658 17.7071 9.70711L12.7071 14.7071Z"
+                  fill="#999999"
+                />
+              </g>
+            </svg>
+          </div>
+          <ul :class="{ hidden: !isShowWorkers }">
+            <li
+              v-for="worker in filteredWorkers"
+              :key="worker.id"
+              class="cursor-pointer gap-1 border-b border-b-black/20 py-2 text-xxs last:border-none hover:bg-gray"
+              @click="addWorker(worker)"
+            >
+              {{ `${worker.lastName} ${worker.name}  ${worker.patronymic}` }}
+            </li>
+          </ul>
+        </div>
         <!-- Опциональные поля: -->
         <InputTextArea
           name="requestDescription"

@@ -10,6 +10,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const selectRef = ref<HTMLSelectElement | null>(null)
 
 // Переменная errorMessage принимает в себя error-значение(string) после валидации - используется в showError и отоброжении ошибок
 // Переменная value связка через v-modal со значениями в input
@@ -72,6 +73,7 @@ function getTranclateStylse() {
     </span>
     <!-- validate-on-input используется, чтобы производить постоянную проверку валидации при первом ее провале -->
     <select
+      ref="selectRef"
       v-model="selectedValue"
       class="w-full rounded-xl focus:outline-none"
       :class="[
