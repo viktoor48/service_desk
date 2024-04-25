@@ -15,7 +15,6 @@ interface CreateRequestForm {
   requestTitle?: string
   requestBuilding?: string
   requestCabinet?: string
-  requestPriority?: string
   requestExecutor?: string
   requestDescription?: string
   requestStatus?: string
@@ -52,7 +51,6 @@ const createRequestValidationSchema = yup.object().shape({
   requestTitle: yup.string().required().min(1, 'Минимум 1 символ'),
   requestBuilding: yup.string().required().min(1, 'Минимум 1 символ'),
   requestCabinet: yup.string().required().min(1, 'Минимум 1 символ'),
-  requestPriority: yup.string().required(),
   requestExecutor: yup.string(),
   requestStatus: yup.string(),
   requestDescription: yup
@@ -73,12 +71,18 @@ const isEnabled = computed(() => {
 
 function sendForm() {
   // isLoading.value = true;
-  const requestBody = new FormData()
+  const data = {
+    typeRequestName: values.requestTitle,
+    cabinet: values.requestCabinet,
+    numberBuilding: values.requestBuilding,
+    status: values.requestStatus,
+    workers: [
+      executors.value,
+    ],
+    description: values.requestDescription,
+  }
 
-  Object.entries(values).forEach(([key, value]) => {
-    requestBody.append(key, value)
-    console.log(key, value)
-  })
+  console.log(data)
 
   // fetch(`${apiURL}/AdminEditRequest`, {
   //   method: "POST",
@@ -116,6 +120,10 @@ console.log(getExecutors)
 
 // Функция добавления работника в список исполнителей
 function addWorker(worker: any) {
+  if (executors.value.includes(worker)) {
+    executors.value = executors.value.filter((w: any) => w !== worker)
+    return
+  }
   executors.value.push(worker)
 }
 
@@ -175,6 +183,7 @@ const isShowWorkers = ref(false)
           :value="selectedRequest?.typeRequest.name"
           type="text"
           text="Название проблемы *"
+          :disabled="true"
         />
         <InputText
           name="requestCabinet"
@@ -204,6 +213,7 @@ const isShowWorkers = ref(false)
             v-model="getExecutors"
             type="text"
             class="mb-4 w-full rounded-xl bg-gray p-4 focus:outline-none"
+            disabled
           >
         </div>
         <div class="relative">

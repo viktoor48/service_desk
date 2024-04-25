@@ -8,6 +8,7 @@ interface Props {
   theme?: 'dark' | 'light'
   value?: string
   placeholder?: string
+  disabled?: boolean
 }
 
 const props = defineProps<Props>()
@@ -101,6 +102,7 @@ function getErrorMessageStyles() {
       :class="[{ 'border border-red': !!errorMessage && showError }, getInputStyles()]"
       :name="name"
       :placeholder="placeholder"
+      :disabled="disabled"
       @focus="isFocused = true"
       @blur="[isFocused = false, showError = !!errorMessage && !!inputValue]"
     >

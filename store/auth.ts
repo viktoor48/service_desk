@@ -111,7 +111,7 @@ export const useAuthStore = defineStore({
         })
 
         if (!response.ok)
-          throw new Error('Failed to create teacher')
+          throw new Error('Failed to create worker')
 
         const responseData = await response.json()
         console.log(responseData)
@@ -119,7 +119,7 @@ export const useAuthStore = defineStore({
         return responseData
       }
       catch (error) {
-        console.error('Error creating teacher:', error)
+        console.error('Error creating worker:', error)
         throw error
       }
     },
