@@ -30,7 +30,7 @@ const executors = ref()
 
 watch(selectedRequest, (newValue, oldValue) => {
   executors.value = newValue.workers
-  console.log(executors)
+  console.log(executors.value)
 })
 
 await store.fetchWorkers()
@@ -39,10 +39,6 @@ employers.value = store.getWorkers
 const getEmployers = computed(() => {
   return employers.value
 })
-
-function getEmployersName() {
-  return getEmployers.value.map((worker: any) => worker.name)
-}
 
 const statusArray = ['Новая', 'В работе', 'Закрыта', 'Ожидание']
 
@@ -69,40 +65,41 @@ const isEnabled = computed(() => {
   return meta.value.valid && !isLoading.value
 })
 
-function sendForm() {
-  // isLoading.value = true;
+async function sendForm() {
+  isLoading.value = true
+  const requestId = selectedRequest.value.id
+
   const data = {
-    typeRequestName: values.requestTitle,
+    typeRequest: selectedRequest.value.typeRequest,
     cabinet: values.requestCabinet,
     numberBuilding: values.requestBuilding,
     status: values.requestStatus,
     workers: [
-      executors.value,
+      ...executors.value,
     ],
     description: values.requestDescription,
   }
 
   console.log(data)
 
-  // fetch(`${apiURL}/AdminEditRequest`, {
-  //   method: "POST",
-  //   body: requestBody,
-  // })
-  //   .then((response) => {
-  //     if (response.ok) {
-  //       vfm.close("clientCreateRequest");
-  //       emit("confirm");
-  //     } else {
-  //       throw new Error("response not ok");
-  //     }
-  //   })
-  //   .catch(() => {
-  //     requestErrorMessage.value =
-  //       "Не удалось отправить сообщение, попробуйте позднее.";
-  //   })
-  //   .finally(() => {
-  //     isLoading.value = false;
-  //   });
+  try {
+    const isSuccess = await store.editRequest(requestId, data)
+
+    if (isSuccess) {
+      closeForm()
+      emit('confirm')
+    }
+    else {
+      throw new Error('response not ok')
+    }
+  }
+  catch (e) {
+    requestErrorMessage.value = 'Что-то пошло не так!'
+  }
+  finally {
+    isLoading.value = false
+    window.location.reload()
+  }
 }
 
 function closeForm() {
@@ -116,12 +113,13 @@ const getExecutors = computed(() => {
     .map((executor: any) => `${executor.lastName} ${executor.name}`)
     .join(', ')
 })
-console.log(getExecutors)
 
 // Функция добавления работника в список исполнителей
 function addWorker(worker: any) {
-  if (executors.value.includes(worker)) {
-    executors.value = executors.value.filter((w: any) => w !== worker)
+  const searchCurrentWorker = executors.value.filter((w: any) => w.id === worker.id)
+
+  if (searchCurrentWorker.length) {
+    executors.value = executors.value.filter((w: any) => w.id !== worker.id)
     return
   }
   executors.value.push(worker)

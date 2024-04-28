@@ -77,6 +77,29 @@ export const useAuthStore = defineStore({
         console.error('Произошла ошибка:', error.message)
       }
     },
+    async editRequest(requestId: any, requestData: any) {
+      try {
+        const response = await fetch(`http://localhost:8000/edit/request/${requestId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        })
+
+        if (!response.ok)
+          throw new Error('Failed to edit request')
+
+        const responseData = await response.json()
+        console.log(responseData)
+
+        console.log('Success')
+        return responseData
+      }
+      catch (error) {
+        console.error('Error edit request:', error)
+      }
+    },
     async createTeacher(data: any) {
       try {
         const response = await fetch('http://localhost:8000/create/teacher', {
