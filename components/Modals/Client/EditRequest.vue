@@ -3,22 +3,21 @@ import { VueFinalModal, useVfm } from 'vue-final-modal'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { useAuthStore } from '~/store/auth'
-import { employees, priorityArray, statusArray } from '~/constants/data'
 
 const emit = defineEmits<{
   (e: 'confirm'): void
 }>()
 
 const store = useAuthStore()
+const employers = ref()
 
 interface CreateRequestForm {
   requestTitle?: string
   requestBuilding?: string
   requestCabinet?: string
-  requestPriority?: string
   requestExecutor?: string
   requestDescription?: string
-  requestStatus?: string
+  requestType?: string
 }
 
 const vfm = useVfm()
@@ -27,32 +26,27 @@ const selectedRequest = computed(() => {
   return store.getTargetRequest
 })
 
-const getCurrentUser = computed(() => {
-
-})
+const executors = ref()
+const typeRequests = ref()
 
 watch(selectedRequest, (newValue, oldValue) => {
-  console.log('New value:', newValue)
+  executors.value = newValue.workers
+  console.log(executors.value)
 })
 
-// Получение списка работников из стора
-const getWorkers = computed(() => {
-  // return store.getWorkers;
-  return employees
-})
+await store.fetchWorkers()
+await store.fetchTypeRequests()
+employers.value = store.getWorkers
+typeRequests.value = store.getTypeRequest
 
-function getEmployersName() {
-  return getWorkers.value.map(worker => worker.name)
-}
+const getEmployers = computed(() => {
+  return employers.value
+})
 
 // Правила валидации полей
 const createRequestValidationSchema = yup.object().shape({
-  requestTitle: yup.string().required().min(1, 'Минимум 1 символ'),
   requestBuilding: yup.string().required().min(1, 'Минимум 1 символ'),
   requestCabinet: yup.string().required().min(1, 'Минимум 1 символ'),
-  requestPriority: yup.string().required(),
-  requestExecutor: yup.string(),
-  requestStatus: yup.string(),
   requestDescription: yup
     .string()
     .max(190, 'Описание должно содержать максимум 190 символов'),
@@ -69,34 +63,51 @@ const isEnabled = computed(() => {
   return meta.value.valid && !isLoading.value
 })
 
-function sendForm() {
-  // isLoading.value = true;
-  const requestBody = new FormData()
+const getTypeRequest = computed(() => {
+  return typeRequests.value.reduce((acc: any, request: any) => {
+    acc.push(request.name)
+    return acc
+  }, [])
+})
 
-  Object.entries(values).forEach(([key, value]) => {
-    requestBody.append(key, value)
-    console.log(key, value)
-  })
+const getSelectedTypeRequest = computed(() => {
+  const name = values.requestType
+  return typeRequests.value.filter((request: any) => request.name === name)
+})
 
-  // fetch(`${apiURL}/editRequest`, {
-  //   method: "POST",
-  //   body: requestBody,
-  // })
-  //   .then((response) => {
-  //     if (response.ok) {
-  //       vfm.close("clientCreateRequest");
-  //       emit("confirm");
-  //     } else {
-  //       throw new Error("response not ok");
-  //     }
-  //   })
-  //   .catch(() => {
-  //     requestErrorMessage.value =
-  //       "Не удалось отправить сообщение, попробуйте позднее.";
-  //   })
-  //   .finally(() => {
-  //     isLoading.value = false;
-  //   });
+console.log(getTypeRequest.value)
+
+async function sendForm() {
+  isLoading.value = true
+  const requestId = selectedRequest.value.id
+
+  const data = {
+    cabinet: values.requestCabinet,
+    numberBuilding: values.requestBuilding,
+    description: values.requestDescription,
+    typeRequest: getSelectedTypeRequest.value[0],
+  }
+
+  console.log(data)
+
+  try {
+    const isSuccess = await store.editRequest(requestId, data)
+
+    if (isSuccess) {
+      closeForm()
+      emit('confirm')
+    }
+    else {
+      throw new Error('response not ok')
+    }
+  }
+  catch (e) {
+    requestErrorMessage.value = 'Что-то пошло не так!'
+  }
+  finally {
+    isLoading.value = false
+    window.location.reload()
+  }
 }
 
 function closeForm() {
@@ -138,36 +149,23 @@ function closeForm() {
       </div>
       <div class="mt-7 flex flex-col gap-2.5">
         <!-- Поля, который проходят валидацию: Имя, телефон, почта, название компании -->
-        <InputText name="requestTitle" :value="selectedRequest?.title" type="text" text="Название проблемы *" />
+        <InputSelectText
+          name="requestType"
+          text="Тип заявки"
+          :options="getTypeRequest"
+          :default-value="selectedRequest?.typeRequest.name"
+        />
         <InputText
           name="requestCabinet"
           type="text"
           text="Кабинет"
-          :value="selectedRequest?.cabinet_number"
+          :value="selectedRequest?.cabinet"
         />
         <InputText
           name="requestBuilding"
           type="text"
           text="Корпус"
-          :value="selectedRequest?.building_number"
-        />
-        <InputSelectText
-          name="requestPriority"
-          text="Приоритет *"
-          :options="priorityArray"
-          :default-value="selectedRequest?.priority"
-        />
-        <InputText
-          name="requestStatus"
-          type="text"
-          text="Статус"
-          :value="selectedRequest?.status"
-        />
-        <InputSelectText
-          name="requestStatus"
-          text="Статус"
-          :options="statusArray"
-          :default-value="selectedRequest?.status"
+          :value="selectedRequest?.numberBuilding"
         />
         <!-- Опциональные поля: -->
         <InputTextArea

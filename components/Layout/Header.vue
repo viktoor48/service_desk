@@ -10,7 +10,13 @@ const vfm = useVfm()
 const store = useAuthStore()
 
 const shouldOpenAuthModal = computed(() => {
-  return !store.isLoggedIn
+  return !store.getUser
+})
+
+const user: any = store.getUser
+
+const isAdminUser = computed(() => {
+  return user?.roles?.includes('Админ')
 })
 
 // Если shouldOpenAuthModal будет true, открывается модальное окно авторизации
@@ -56,9 +62,6 @@ function getNavStyle() {
 function getLogo() {
   return LogoArr.get(props.theme || 'default')!
 }
-
-// Проверяем, является ли пользователь администратором
-const isAdminUser = computed(() => store.getRole === 'admin')
 </script>
 
 <template>
@@ -69,7 +72,7 @@ const isAdminUser = computed(() => store.getRole === 'admin')
     >
       <nav class="hidden items-center lg:flex">
         <ul class="flex gap-3 xl:gap-7">
-          <template v-if="isAdminUser">
+          <template v-if="!user?.isTeacher">
             <li>
               <NuxtLink
                 to="/"
@@ -78,7 +81,7 @@ const isAdminUser = computed(() => store.getRole === 'admin')
                 Заявки
               </NuxtLink>
             </li>
-            <li>
+            <li v-if="isAdminUser">
               <NuxtLink
                 to="/employers"
                 class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-blue"
@@ -86,7 +89,7 @@ const isAdminUser = computed(() => store.getRole === 'admin')
                 Сотрудники
               </NuxtLink>
             </li>
-            <li>
+            <li v-if="isAdminUser">
               <NuxtLink
                 to="/teachers"
                 class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-blue"

@@ -1,53 +1,64 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { orders } from '~/constants/data'
 import { useAuthStore } from '~/store/auth'
 
-definePageMeta({
-  layout: 'client',
-})
+// definePageMeta({
+//   layout: "client",
+// });
 
 const store = useAuthStore()
 const router = useRouter()
 
-const currentUser = ref(null) as any
-const isLoading = ref(true);
+const isLoading = ref(true)
+const requests = ref(null) as any
 
-(async () => {
-  if (store.getRole === 'admin')
-    await router.push('/')
-  else
-    isLoading.value = false // Устанавливаем isLoading в false, когда проверка завершена
-})()
+// Вотчер, который проверяет авторизацию пользователя и отправляет запрос на получение заявок
+watchEffect(async () => {
+  // Получаем пользователя
+  const user = store.getUser
+  console.log(user)
 
-const order = [orders[0]]
-// const order = [] as any;
-
-// Подгружаем пользователя
-isLoading.value = true
-await store.loadUser()
-currentUser.value = store.getUser
-isLoading.value = false
-
-const getUser = computed(() => {
-  return currentUser.value
+  // Если пользователь авторизован, делаем запрос на получение заявок
+  if (user) {
+    console.log(user)
+    if (!user?.isTeacher) {
+      isLoading.value = false
+      await router.push('/')
+      return
+    }
+    try {
+      console.log('делаем запрос')
+      await store.fetchRequestsTeacher(user.id)
+      requests.value = store.getTeachersRequest
+      isLoading.value = false
+    }
+    catch (error) {
+      console.error('Error fetching requests:', error)
+      isLoading.value = false
+    }
+  }
 })
+
+const getRequests = computed(() => {
+  return requests.value
+})
+
+console.log('заявки препода')
+console.log(getRequests)
 </script>
 
 <template>
   <div class="pt-5 font-title text-2xl">
     Мои заявки
   </div>
-  <Loading v-if="isLoading" />
-  <div v-else>
-    <TableBasis v-if="order.length" :content="order" class="py-5" />
-    <div v-else class="py-5 text-lg">
-      Список заявок пуст
-    </div>
-  </div>
   <div>
     <Loading v-if="isLoading" />
-    <TableClient v-else :user="getUser" />
+    <div v-else>
+      <div v-if="!getRequests.length" class="py-5 text-lg">
+        Список заявок пуст
+      </div>
+      <TableClient v-else :content="getRequests" class="py-5" />
+    </div>
   </div>
 </template>
 

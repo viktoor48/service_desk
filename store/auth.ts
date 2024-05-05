@@ -13,9 +13,12 @@ export const useAuthStore = defineStore({
     teachers: null,
     workers: null,
     targetRequest: null as any | null,
+    teachersRequest: null,
+    typeRequests: null,
+    devices: null,
   }),
   getters: {
-    isLoggedIn: state => state.user, // изменить условие когда будет готова авторизация!
+    isLoggedIn: state => state.user,
     getRole: state => state.role,
     getRequests: state => state.allRequests,
     getUser: state => state.user,
@@ -23,6 +26,9 @@ export const useAuthStore = defineStore({
     getUsers: state => state.allUsers,
     getTargetRequest: state => state.targetRequest,
     getTeachers: state => state.teachers,
+    getTeachersRequest: state => state.teachersRequest,
+    getTypeRequest: state => state.typeRequests,
+    getDevices: state => state.devices,
   },
   actions: {
     setTargetRequest(order: any) {
@@ -42,22 +48,12 @@ export const useAuthStore = defineStore({
 
       const data = await response.json()
 
-      this.user = data
+      this.user = data.user
       console.log(this.user)
       localStorage.setItem('userData', JSON.stringify(this.user))
       return true
     },
-    async createRequest() {
-      const requestData = {
-        type_request_id: 1,
-        status: 'Новая',
-        description: 'Не работает интернет',
-        cabinet: '101',
-        number_building: '1',
-        device_id: 1,
-        teacher_id: 1,
-      }
-
+    async createRequest(requestData: any) {
       try {
         const response = await fetch('http://localhost:8000/create/request', {
           method: 'POST',
@@ -71,7 +67,8 @@ export const useAuthStore = defineStore({
           throw new Error('Ошибка создания заявки')
 
         const responseData = await response.json()
-        console.log(responseData.message) // Выводим сообщение об успешном создании заявки
+        console.log(responseData.message)
+        return responseData
       }
       catch (error: any) {
         console.error('Произошла ошибка:', error.message)
@@ -79,13 +76,16 @@ export const useAuthStore = defineStore({
     },
     async editRequest(requestId: any, requestData: any) {
       try {
-        const response = await fetch(`http://localhost:8000/edit/request/${requestId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `http://localhost:8000/edit/request/${requestId}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
           },
-          body: JSON.stringify(requestData),
-        })
+        )
 
         if (!response.ok)
           throw new Error('Failed to edit request')
@@ -162,6 +162,69 @@ export const useAuthStore = defineStore({
       }
       catch (e: any) {
         console.log(e.message)
+      }
+    },
+    async fetchRequestsTeacher(teacherId: any) {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/get/teacherRequests/${teacherId}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        )
+        if (!response.ok)
+          throw new Error('Network response was not ok')
+
+        const data = await response.json()
+        this.teachersRequest = data
+        return data
+      }
+      catch (error: any) {
+        console.log(error.message)
+      }
+    },
+    async fetchTypeRequests() {
+      try {
+        const response = await fetch(
+          'http://localhost:8000/api/type_requests',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        )
+
+        if (!response.ok)
+          throw new Error('Network response was not ok')
+
+        const data = await response.json()
+        this.typeRequests = data['hydra:member']
+      }
+      catch (error: any) {
+        console.log(error)
+      }
+    },
+    async fetchDevices() {
+      try {
+        const response = await fetch(
+          'http://localhost:8000/api/devices',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        )
+
+        if (!response.ok)
+          throw new Error('Network response was not ok')
+
+        const data = await response.json()
+        this.devices = data['hydra:member']
+      }
+      catch (error: any) {
+        console.log(error)
       }
     },
     async fetchWorkers() {

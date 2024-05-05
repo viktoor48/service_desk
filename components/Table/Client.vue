@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useVfm } from 'vue-final-modal'
-import { userStore } from '~/store/user'
+import { useAuthStore } from '~/store/auth'
 import type { Order } from '~/types'
 import { getFormttedDate } from '~/composables'
 
 const props = defineProps<{
-  user: any
+  content: any
 }>()
 
-const store = userStore()
+const store = useAuthStore()
 
 const vfm = useVfm()
 
@@ -18,13 +18,19 @@ function openEditRequest(order: Order) {
   vfm.open('ClientEditRequest')
 }
 
+function formattedWorkers(workers: any) {
+  if (workers.length)
+    return workers.map((executor: any) => `${executor.lastName} ${executor.name}`).join(', ')
+
+  return 'Не назначен'
+}
+
 const defaultHeaders = [
   '№',
   'Статус',
-  'Приоритет',
-  'Наименование заявки',
-  'Заявитель',
+  'Тип заявки',
   'Описание',
+  'Исполнители',
   'Создана',
 ]
 
@@ -51,13 +57,13 @@ function truncateDescription(description: string): string {
       </thead>
       <tbody>
         <TableRow
-          v-for="(order, ind) in props.user.requests"
+          v-for="(order, ind) in props.content"
           :key="ind"
           @click="openEditRequest(order)"
         >
           <TableData>
             <NuxtLink class="cursor-pointer">
-              {{ order.id }}
+              {{ ind + 1 }}
             </NuxtLink>
           </TableData>
           <TableData>
@@ -67,29 +73,22 @@ function truncateDescription(description: string): string {
           </TableData>
           <TableData>
             <NuxtLink class="cursor-pointer">
-              приоритет ?
+              {{ order.typeRequest.name }}
             </NuxtLink>
           </TableData>
           <TableData>
             <NuxtLink class="cursor-pointer">
-              {{ order.title }}
+              {{ order.description }}
             </NuxtLink>
           </TableData>
           <TableData>
             <NuxtLink class="cursor-pointer">
-              {{
-                `${user.first_name} ${user.last_name} ${user.patronymic}`
-              }}
+              {{ formattedWorkers(order.workers) }}
             </NuxtLink>
           </TableData>
           <TableData class="max-w-[200px]">
             <NuxtLink class="cursor-pointer">
-              {{ truncateDescription(order.description) }}
-            </NuxtLink>
-          </TableData>
-          <TableData>
-            <NuxtLink class="cursor-pointer">
-              {{ getFormttedDate(order.time_creation) }}
+              {{ getFormttedDate(order.timeStart) }}
             </NuxtLink>
           </TableData>
         </TableRow>

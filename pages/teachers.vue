@@ -8,11 +8,11 @@ const vfm = useVfm()
 
 const isLoading = ref(true)
 const teachers = ref(null) as any
-const user = store.getUser.user;
+const user = store.getUser;
 
 // Проверяем, является ли пользователь администратором
 (async () => {
-  if (!user.roles.includes('Админ'))
+  if (!user?.roles.includes('Админ'))
     await router.push('/client')
 
   else

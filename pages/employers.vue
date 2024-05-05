@@ -8,7 +8,7 @@ const router = useRouter()
 
 const isLoading = ref(true)
 const employers = ref(null) as any
-const user = store.getUser.user;
+const user = store.getUser;
 
 // Проверяем, является ли пользователь администратором
 (async () => {
