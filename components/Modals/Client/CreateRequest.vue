@@ -29,7 +29,7 @@ const executors = ref()
 const typeRequests = ref()
 const devices = ref()
 const teacherId = computed(() => {
-  return store.getUser?.user?.id
+  return store.getUser?.id
 })
 
 watch(selectedRequest, (newValue, oldValue) => {
