@@ -14,6 +14,7 @@ function confirm() {
   <ModalsAuthorization @confirm="confirm" />
   <ModalsClientCreateRequest @confirm="confirm" />
   <ModalsEditRequest @confirm="confirm" />
+  <ModalsDeleteEmployer @confirm="confirm" />
   <ModalsClientEditRequest' @confirm="confirm" />
   <ModalsCreateWorker @confirm="confirm" />
   <ModalsAdminEditRequest @confirm="confirm" />

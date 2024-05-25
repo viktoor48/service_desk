@@ -16,6 +16,7 @@ export const useAuthStore = defineStore({
     teachersRequest: null,
     typeRequests: null,
     devices: null,
+    targetEmployer: null,
   }),
   getters: {
     isLoggedIn: state => state.user,
@@ -29,10 +30,14 @@ export const useAuthStore = defineStore({
     getTeachersRequest: state => state.teachersRequest,
     getTypeRequest: state => state.typeRequests,
     getDevices: state => state.devices,
+    getTargetEmployer: state => state.targetEmployer,
   },
   actions: {
     setTargetRequest(order: any) {
       this.targetRequest = order
+    },
+    setTargetEmployer(employer: any) {
+      this.targetEmployer = employer
     },
     async login(login: any, password: any) {
       const response = await fetch('http://localhost:8000/authorization', {
@@ -144,6 +149,28 @@ export const useAuthStore = defineStore({
       catch (error) {
         console.error('Error creating worker:', error)
         throw error
+      }
+    },
+    async deleteEmployer(data: any) {
+      try {
+        const response = await fetch('http://localhost:8000/delete/employer', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || 'Unknown error occurred')
+        }
+
+        const responseData = await response.json()
+        return true
+      }
+      catch (error: any) {
+        console.error(error)
       }
     },
     async fetchRequests() {

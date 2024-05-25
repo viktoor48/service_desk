@@ -23,6 +23,13 @@ const defaultHeaders = [
   'Отчество',
   'Должность',
 ]
+
+function openDeleteEmployer(employer: any) {
+  store.setTargetEmployer(employer)
+  vfm.open('deleteEmployer')
+}
+
+const user = store.getUser
 </script>
 
 <template>
@@ -41,6 +48,7 @@ const defaultHeaders = [
         <TableRow
           v-for="(employer, ind) in props.employers"
           :key="ind"
+          class="relative"
         >
           <TableData>
             <NuxtLink class="cursor-pointer">
@@ -69,6 +77,9 @@ const defaultHeaders = [
               {{ employer.post }}
             </NuxtLink>
           </TableData>
+          <div v-if="employer.id !== user.id" class="absolute right-0 cursor-pointer p-2 text-xl leading-[100%] hover:text-blue" @click="openDeleteEmployer(employer)">
+            ×
+          </div>
         </TableRow>
       </tbody>
     </table>
