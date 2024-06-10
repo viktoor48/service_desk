@@ -272,15 +272,6 @@ export const useAuthStore = defineStore({
       const data = await response.json()
       this.teachers = data['hydra:member']
     },
-    async loadUsers() {
-      const response = await fetch('http://62.217.178.20/users', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await response.json()
-      this.allUsers = data
-    },
     logout() {
       this.user = null
       localStorage.removeItem('userData')
