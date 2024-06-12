@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useVfm } from 'vue-final-modal'
-import Logo from '~/assets/images/Logo.svg?skipsvgo'
+import Logo from '~/assets/images/lgtu.png'
 import { useAuthStore } from '~/store/auth'
 
 const props = defineProps<Props>()
@@ -18,8 +18,8 @@ const textButton = computed(() => {
 
 const vfm = useVfm()
 const StyleArr: Map<string, string> = new Map([
-  ['dark', 'bg-black text-white border-white'],
-  ['default', 'bg-white text-black border-black'],
+  ['dark', 'text-white border-white'],
+  ['default', 'text-black border-black'],
 ])
 
 function getStyle() {
@@ -43,7 +43,7 @@ function getLogo() {
     >
       <div>
         <NuxtLink to="/">
-          <component :is="getLogo()" class="h-10 w-auto lg:h-auto" alt="" />
+          <img :src="Logo" class="h-16 w-auto" alt="">
         </NuxtLink>
       </div>
 

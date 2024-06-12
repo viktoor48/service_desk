@@ -27,8 +27,7 @@ export default <Partial<Config>>{
       warning: '#FFA800',
     },
     fontFamily: {
-      sans: ['Inter', 'sans-serif'],
-      title: ['Unbounded', 'sans-serif'],
+      montserrat: ['Montserrat', 'sans-serif'],
     },
     fontSize: {
       'xxs': ['0.875rem', '1rem'],

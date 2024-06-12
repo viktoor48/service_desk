@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useVfm } from 'vue-final-modal'
-import Logo from '~/assets/images/Logo.svg?skipsvgo'
+import Logo from '~/assets/images/lgtu.png'
 import { useIsScrollBlocked } from '~/composables/useState'
-import LogoBlack from '~/assets/images/LogoBlack.svg?skipsvgo'
+import LogoBlack from '~/assets/images/lgtu.png'
 import { useAuthStore } from '~/store/auth'
 
 const props = defineProps<Props>()
@@ -31,10 +31,10 @@ interface Props {
 
 const StyleArr: Map<string, string> = new Map([
   ['dark', 'bg-black text-white border-white'],
-  ['default', 'bg-white text-black border-black'],
+  ['default', 'text-black border-black'],
 ])
 const NavStyleArr: Map<string, string> = new Map([
-  ['dark', 'bg-white'],
+  ['dark', ''],
   ['default', 'bg-black'],
 ])
 const LogoArr: Map<string, any> = new Map([
@@ -65,9 +65,9 @@ function getLogo() {
 </script>
 
 <template>
-  <header class="sticky top-0 z-10 w-full px-5 lg:px-10" :class="getStyle()">
+  <header class="sticky top-0 z-10 w-full px-5 text-white lg:px-10" :class="getStyle()">
     <div
-      class="relative z-10 flex h-16 grid-cols-header content-center items-center justify-between border-b lg:grid lg:h-24"
+      class="relative z-10 flex h-16 grid-cols-header content-center items-center justify-between border-b text-white lg:grid lg:h-24"
       :class="getStyle()"
     >
       <nav class="hidden items-center lg:flex">
@@ -76,7 +76,7 @@ function getLogo() {
             <li>
               <NuxtLink
                 to="/"
-                class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-blue"
+                class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-[#b8b2b2]"
               >
                 Заявки
               </NuxtLink>
@@ -84,7 +84,7 @@ function getLogo() {
             <li v-if="isAdminUser">
               <NuxtLink
                 to="/employers"
-                class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-blue"
+                class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-[#b8b2b2]"
               >
                 Сотрудники
               </NuxtLink>
@@ -92,7 +92,7 @@ function getLogo() {
             <li v-if="isAdminUser">
               <NuxtLink
                 to="/teachers"
-                class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-blue"
+                class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-[#b8b2b2]"
               >
                 Преподаватели
               </NuxtLink>
@@ -101,7 +101,7 @@ function getLogo() {
           <template v-else>
             <li>
               <NuxtLink
-                class="underline-animation relative inline-block cursor-pointer text-sm font-semibold uppercase transition-colors duration-300 hover:text-blue"
+                class="underline-animation relative inline-block cursor-pointer text-sm font-semibold uppercase transition-colors duration-300 hover:text-[#b8b2b2]"
                 @click="vfm.open('clientCreateRequest')"
               >
                 Создать заявку
@@ -110,7 +110,7 @@ function getLogo() {
             <li>
               <NuxtLink
                 to="/client"
-                class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-blue"
+                class="underline-animation relative inline-block text-sm font-semibold uppercase transition-colors duration-300 hover:text-[#b8b2b2]"
               >
                 Мои заявки
               </NuxtLink>
@@ -120,7 +120,7 @@ function getLogo() {
       </nav>
 
       <NuxtLink to="/">
-        <component :is="getLogo()" class="h-10 w-auto lg:h-auto" alt="" />
+        <img :src="Logo" class="h-16 w-auto" alt="">
       </NuxtLink>
 
       <div class="hidden items-center justify-end lg:flex">
@@ -163,7 +163,7 @@ function getLogo() {
       >
         <nav>
           <ul
-            class="flex flex-col gap-5 font-title text-lg font-bold md:gap-10"
+            class="font-title flex flex-col gap-5 text-lg font-bold md:gap-10"
           >
             <template v-if="isAdminUser">
               <li>
@@ -211,11 +211,11 @@ function getLogo() {
 
 <style scoped lang="postcss">
 .underline-animation {
-  @apply after:bg-blue after:h-0.5 after:w-full after:absolute after:left-0 after:bottom-0 after:-translate-y-1 after:transition after:duration-300 after:opacity-0 hover:after:translate-y-0 hover:after:opacity-100;
+  @apply after:bg-[#b8b2b2] after:h-0.5 after:w-full after:absolute after:left-0 after:bottom-0 after:-translate-y-1 after:transition after:duration-300 after:opacity-0 hover:after:translate-y-0 hover:after:opacity-100;
 }
 
 .router-link-active,
 .NuxtLink--exact-active {
-  @apply text-blue;
+  @apply text-[#b8b2b2];
 }
 </style>

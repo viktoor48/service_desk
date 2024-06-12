@@ -25,7 +25,7 @@ const defaultHeaders = [
   'Описание',
   'Заявитель',
   'Исполнители',
-  'Создана',
+  'Изменена',
 ]
 
 function truncateDescription(description: string): string {
